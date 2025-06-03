@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>George Chloe Elohor's Dynamic Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <img src="https://imgur.com/drgwCkz.png" alt="George Chloe Elohor Profile" id="profile-img" />
+    <h1>Hello, I'm George Chloe Elohor!</h1>
+    <p>Cyber Security Student | Passionate about web development and creating engaging experiences.</p>
+  </header>
+
+  <main>
+    <section id="about">
+      <h2>About Me</h2>
+      <p>
+        I am a student of Cyber Security (Matric No: 24/14645). I enjoy dancing, singing, and coding. I love learning new technologies and building responsive web applications.
+      </p>
+    </section>
+
+    <section id="multimedia-showcase">
+      <h2>Multimedia Showcase</h2>
+      <h3>My Audio Greeting:</h3>
+      <audio controls>
+        <source src="https://voca.ro/1mbmsISvUsQD.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+
+      <h3>A Quick Project Video:</h3>
+      <video controls width="320" height="240">
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </section>
+
+    <section id="interactive-skills">
+      <h2>My Skills</h2>
+      <div class="skill-buttons">
+        <button class="skill-btn" data-skill="HTML">HTML</button>
+        <button class="skill-btn" data-skill="CSS">CSS</button>
+        <button class="skill-btn" data-skill="JavaScript">JavaScript</button>
+      </div>
+      <p id="skill-description">Click a skill to learn more!</p>
+    </section>
+
+    <section id="portfolio-list">
+      <h2>My Projects</h2>
+      <div id="projects-container"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="current-year"></span> George Chloe Elohor. All rights reserved.</p>
+    <button id="themeToggle">Toggle Dark Mode</button>
+  </footer>
+
+  <script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    const skillInfo = {
+      HTML: 'HTML (HyperText Markup Language) defines the structure of web content.',
+      CSS: 'CSS (Cascading Style Sheets) styles the look and layout of websites.',
+      JavaScript: 'JavaScript brings interactivity to web pages.'
+    };
+
+    document.querySelectorAll('.skill-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const skill = btn.dataset.skill;
+        const desc = document.getElementById('skill-description');
+        desc.textContent = skillInfo[skill];
+        desc.style.color = '#0056b3';
+      });
+    });
+
+    const toggleBtn = document.getElementById('themeToggle');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+
+    async function loadProjects() {
+      const container = document.getElementById('projects-container');
+      try {
+        const res = await fetch('data/portfolio_items.json');
+        const data = await res.json();
+        data.forEach((project) => {
+          const div = document.createElement('div');
+          div.className = 'project-card';
+          div.innerHTML = `<h3>${project.name}</h3><p>${project.description}</p><a href="${project.link}" target="_blank">View Project</a>`;
+          container.appendChild(div);
+        });
+      } catch (e) {
+        container.innerHTML = '<p>Failed to load projects.</p>';
+      }
+    }
+    loadProjects();
+  </script>
+</body>
+</html>
